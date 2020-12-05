@@ -1,1 +1,4 @@
 __pycache__/
+test_*
+.idea/
+.python-version

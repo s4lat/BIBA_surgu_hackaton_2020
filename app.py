@@ -30,6 +30,9 @@ def index(error_message=None):
     return render_template('index.html', crimes=events,
                            categories=categories, error_message=error_message)
 
+@app.route("/get_events")
+def get_events():
+    pass
 
 @app.route("/add", methods=["POST"])
 def add():
