@@ -7,10 +7,10 @@ class DB:
 		self.user = user
 		self.pwd = pwd
 		self.client = MongoClient("mongodb://%s:%s@%s" % (user, pwd, addr))
-		self.col = self.client.db["incidents"]
+		self.events = self.client.db["events"]
 
 	def get_all_events(self):
-		return list(self.col.find())
+		return list(self.events.find())
 
 	def insert_events(self, id:int, title:str, desc:str, img:str, lvl:int, lon:float, lat:float, cnfrmd:bool):
 		pass
