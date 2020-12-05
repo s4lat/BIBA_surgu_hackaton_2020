@@ -10,10 +10,17 @@ class DB:
 		self.events = self.client.test["events"]
 
 	def get_all_events(self):
-		return list(self.events.find({}))
+		return list(self.events.find({}, {'_id': False}))
 
-	def insert_events(self, id:int, title:str, desc:str, img:str, lvl:int, lon:float, lat:float, cnfrmd:bool):
-		pass
+	def insert_events(self, title:str, desc:str, img:str, lvl:int, lon:float, lat:float, cnfrmd:bool):
+		return self.events.insert_one({
+			"title": title,
+			"desc": desc,
+			"img": img,
+			"lvl": lvl,
+			"lon": lon,
+
+			})
 	
 	def get_events_by_level(self, lvl:int):
 		pass
