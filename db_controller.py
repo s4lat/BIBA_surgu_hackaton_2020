@@ -12,15 +12,14 @@ class DB:
 	def get_all_events(self):
 		return list(self.events.find({}, {'_id': False}))
 
-	def insert_events(self, title:str, desc:str, img:str, lvl:int, lon:float, lat:float, cnfrmd:bool):
+	def insert_event(self, title:str, desc:str, img:str, lvl:int, lon:float, lat:float, cnfrmd:bool):
 		return self.events.insert_one({
 			"title": title,
 			"desc": desc,
 			"img": img,
 			"lvl": lvl,
 			"lon": lon,
-
-			})
+			}).inserted_id
 	
 	def get_events_by_level(self, lvl:int):
 		pass
