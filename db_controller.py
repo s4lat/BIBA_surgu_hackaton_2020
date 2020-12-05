@@ -26,10 +26,18 @@ class DB:
 	def get_events_by_lvl(self, lvl:int):
 		return list(self.events.find({"lvl" : lvl}, {'_id': False}))
 
-	def update_event(self, id:int, new:dict):
-		pass
+	def update_event(self, _id:int, new_d:dict):
+		_id -= 1
+
+		events = list(self.events.find({}).sort([['_id', 1]]))
+		return self.events.update_one(
+			{'_id': events[_id]["_id"]},
+			{'$set': new_d }, upsert=False).modified_count
+
 
 	def remove_event(self, _id:int):
+		_id -= 1
+
 		events = list(self.events.find({}).sort([['_id', 1]]))
-		return self.events.delete_one({"_id" : events[_id-1]["_id"]}).deleted_count
+		return self.events.delete_one({"_id" : events[_id]["_id"]}).deleted_count
 
