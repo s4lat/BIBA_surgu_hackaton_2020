@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from flask import Flask, render_template, url_for, redirect
 from flask import request as flaskRequest
-import json, datetime, dateparser, string
 from db_controller import DB
+import json, time
 
 app = Flask(__name__)
 
@@ -13,6 +14,8 @@ categories = ['Mugging', 'Break-in']
 
 def is_user_authenticated():
     auf = flaskRequest.cookies.get("auf")
+    if not auf:
+        return False
     phone, token = auf.split(":")
     user = db.get_user(phone)
 
@@ -25,6 +28,7 @@ def is_user_authenticated():
 
     return True
 
+
 def auth_required(func):
     def wrapper():
         if is_user_authenticated():
@@ -35,18 +39,6 @@ def auth_required(func):
     return wrapper
 
 
-
-def format_date(userdate):
-    date = dateparser.parse(userdate)
-    try:
-        return datetime.datetime.strftime(date, "%Y-%m-%d")
-    except:
-        return None
-
-
-def sanitize_string(userinput):
-    whitelist = string.ascii_letters + string.digits + " !?$.,;:-'()&\""
-    return ''.join(list(filter(lambda x: x in whitelist, userinput)))
 
 @app.route("/")
 @auth_required
