@@ -7,8 +7,33 @@ from db_controller import DB
 app = Flask(__name__)
 
 db = DB("165.22.193.119", 27017, "root", "toor")
+TOKEN_LIFETIME = 21600
 
 categories = ['Mugging', 'Break-in']
+
+def is_user_authenticated():
+    auf = flaskRequest.cookies.get("auf")
+    phone, token = auf.split(":")
+    user = db.get_user(phone)
+
+    if not user:
+        return False
+    if time.time() - user["user_token"] > TOKEN_LIFETIME:
+        return False
+    if token != user["user_token"]:
+        return False
+
+    return True
+
+def auth_required(func):
+    def wrapper():
+        if is_user_authenticated():
+            func()
+        else:
+            return redirect("/auth")
+
+    return wrapper
+
 
 
 def format_date(userdate):
@@ -23,8 +48,8 @@ def sanitize_string(userinput):
     whitelist = string.ascii_letters + string.digits + " !?$.,;:-'()&\""
     return ''.join(list(filter(lambda x: x in whitelist, userinput)))
 
-
 @app.route("/")
+@auth_required
 def index(error_message=None):
     events = json.dumps(DB.get_all_events())
     return render_template('index.html', crimes=events,
@@ -109,7 +134,7 @@ def add():
 
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
-    pass
+    return "Авторизуйся дядя"
 
 
 if __name__ == "__main__":
