@@ -8,9 +8,7 @@ import json, time
 app = Flask(__name__)
 
 db = DB("165.22.193.119", 27017, "root", "toor")
-TOKEN_LIFETIME = 60
-
-categories = ['Mugging', 'Break-in']
+TOKEN_LIFETIME = 21600
 
 def is_user_authenticated():
     auf = flaskRequest.cookies.get("auf")
@@ -37,14 +35,6 @@ def auth_required(func):
             return redirect("/auth")
 
     return wrapper
-
-
-@app.route("/fakeauf")
-def fakeauf():
-    resp = make_response("Faggot auforized")
-    resp.set_cookie('auf', '+79992:7a4e5006da9c8ebe96407ee444f0d21cfb1e93d7766153e48d94f81e90642dc6')
-
-    return resp
 
 
 @app.route("/")
@@ -104,35 +94,17 @@ def insert_event():
         return json.dumps(data)
     except KeyError:
         return json.dumps({"error": "Missing arguments"})
-    
-
-
-@app.route("/add", methods=["POST"])
-def add():
-    category = flaskRequest.form.get('category')
-    if category not in categories:
-        return redirect(url_for('index'))
-    title = flaskRequest.form.get('title')
-    #date = format_date(flaskRequest.form.get('date'))
-    #if not date:
-    #    return index("Invalid date. Please use dd-mm-YYYY format")
-    try:
-        latitude = float(flaskRequest.form.get('latitude'))
-        longitude = float(flaskRequest.form.get('longitude'))
-    except ValueError:
-        return index("Please place marker on the map")
-    description = sanitize_string(flaskRequest.form.get('description'))
-    try:
-        DB.add_event(category, title, latitude, longitude, description)
-    except Exception as e:
-        print(e)
-    finally:
-        return index()
 
 
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
     return "Авторизуйся дядя"
+
+@app.route("/reg", methods=["GET", "POST"])
+def reg():
+    data = flaskRequest.get_json()
+
+    return render_template("register.html")
 
 
 if __name__ == "__main__":
