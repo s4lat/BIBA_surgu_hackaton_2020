@@ -9,6 +9,7 @@
             type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css"
             href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
   </head>
   <body>
     <div style="width: 640px; height: 480px" id="mapContainer"></div>
@@ -33,6 +34,7 @@
         });
 
     // Create the default UI:
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
     var ui = H.ui.UI.createDefault(map, defaultLayers, 'ru-RU');
     var mapSettings = ui.getControl('mapsettings');
     var zoom = ui.getControl('zoom');
