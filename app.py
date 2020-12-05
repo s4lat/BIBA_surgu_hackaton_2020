@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, make_response
 from flask import request as flaskRequest
 from db_controller import DB
 import json, time
@@ -8,7 +8,7 @@ import json, time
 app = Flask(__name__)
 
 db = DB("165.22.193.119", 27017, "root", "toor")
-TOKEN_LIFETIME = 21600
+TOKEN_LIFETIME = 60
 
 categories = ['Mugging', 'Break-in']
 
@@ -21,9 +21,9 @@ def is_user_authenticated():
 
     if not user:
         return False
-    if time.time() - user["user_token"] > TOKEN_LIFETIME:
+    if time.time() - user["creation_date"] > TOKEN_LIFETIME:
         return False
-    if token != user["user_token"]:
+    if token != user["token"]:
         return False
 
     return True
@@ -32,20 +32,26 @@ def is_user_authenticated():
 def auth_required(func):
     def wrapper():
         if is_user_authenticated():
-            func()
+            return func()
         else:
             return redirect("/auth")
 
     return wrapper
 
 
+@app.route("/fakeauf")
+def fakeauf():
+    resp = make_response("Faggot auforized")
+    resp.set_cookie('auf', '+79992:7a4e5006da9c8ebe96407ee444f0d21cfb1e93d7766153e48d94f81e90642dc6')
+
+    return resp
+
 
 @app.route("/")
 @auth_required
-def index(error_message=None):
-    events = json.dumps(DB.get_all_events())
-    return render_template('index.html', crimes=events,
-                           categories=categories, error_message=error_message)
+def index():
+    events = json.dumps(db.get_all_events())
+    return "SDASFSFSDGDTJUYWSDXC"
 
 
 @app.route("/get_events", methods=["GET"])
