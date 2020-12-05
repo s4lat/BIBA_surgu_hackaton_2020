@@ -23,9 +23,9 @@ class DB:
 	def update_user_token(self, phone):
 		token = phone+ str(time.time()) + phone * 2 + str(time.time())
 		token = hashlib.sha256(token.encode("utf-8")).digest().hex()
-		return self.users.update(
+		return self.users.update_one(
 			{"phone": phone}, 
-			{"token": token, "creation_date" : int(time.time())}, upsert=True)
+			{"$set": {"token": token, "creation_date" : int(time.time())}}, upsert=True).modified_count
 
 	def get_user(self, phone):
 		return self.users.find_one({"phone" : phone})
