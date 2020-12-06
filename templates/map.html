@@ -44,11 +44,24 @@
     zoom.setAlignment('top-left');
     scalebar.setAlignment('top-left');
 
-    var bubble = new H.ui.InfoBubble({ lng: 13.4, lat: 52.51 }, {
-                content: '<b>Zdes byl ded</b>'
-             });
-    ui.addBubble(bubble);
+    // var bubble = new H.ui.InfoBubble({ lng: 13.4, lat: 52.51 }, {
+    //             content: '<b>Zdes byl ded</b>'
+    //          });
+    // ui.addBubble(bubble);
 
+    function moveToUserPos(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      // map.setCenter({lat: lat, lng: lng});
+      console.log(lat, lng)
+
+    }
+        // var bubble = new H.ui.InfoBubble({ lng: 13.4, lat: 52.51 }, {
+    //             content: '<b>Zdes byl ded</b>'
+    //          });
+    // ui.addBubble(bubble);
+
+    navigator.geolocation.getCurrentPosition(moveToUserPos);
     </script>
   </body>
 </html>

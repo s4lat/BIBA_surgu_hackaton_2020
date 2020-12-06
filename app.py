@@ -38,10 +38,10 @@ def auth_required(func):
 
 
 @app.route("/")
-@auth_required
+# @auth_required
 def index():
-    events = json.dumps(db.get_all_events())
-    return "SDASFSFSDGDTJUYWSDXC"
+    # events = json.dumps(db.get_all_events())
+    return render_template("ymap.html")
 
 
 @app.route("/get_events", methods=["GET"])
@@ -82,7 +82,7 @@ def insert_event():
     try:
         title = data["title"]
         desc = data["desc"]
-        img = data["img"]
+        # img = data["img"]
         lvl = int(data["lvl"])
         lon = data["lon"]
         lat = data["lat"]
@@ -90,7 +90,7 @@ def insert_event():
             cnfrmd = True
         else:
             cnfrmd = False
-        db.insert_event(title=title, desc=desc, img=img, lvl=lvl, lon=lon, lat=lat, cnfrmd=cnfrmd)
+        db.insert_event(title=title, desc=desc, img="img", lvl=lvl, lon=lon, lat=lat, cnfrmd=cnfrmd)
         return json.dumps(data)
     except KeyError:
         return json.dumps({"error": "Missing arguments"})
